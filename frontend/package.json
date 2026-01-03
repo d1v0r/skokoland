@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=./",
+    "build": "vite build --base=/",
     "preview": "vite preview",
     "preview:prod": "vite preview --host --port 3000",
     "vercel-build": "vite build --base=./"
