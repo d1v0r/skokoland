@@ -1,6 +1,22 @@
 import { useState } from 'react';
 import './App.css';
 
+const ErrorBoundary = ({ children }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return (
+      <div className="error-fallback">
+        <h2>Došlo je do pogreške</h2>
+        <p>Oprostite, došlo je do neočekivane pogreške. Molimo osvježite stranicu.</p>
+        <button onClick={() => window.location.reload()}>Osvježi stranicu</button>
+      </div>
+    );
+  }
+
+  return children;
+};
+
 export default function App() {
   const [selectedPackage, setSelectedPackage] = useState(null);
 
@@ -37,13 +53,35 @@ export default function App() {
     }
   ];
 
-  const selectPackage = (pkg) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const selectPackage = (pkg, e) => {
+    e?.stopPropagation();
     setSelectedPackage(pkg);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', { ...formData, selectedPackage });
+    // Add your form submission logic here
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
-    <div className="app">
-      <header>
+    <ErrorBoundary>
+      <div className="app">
+        <header>
         <h1>🎉 Party Obrt</h1>
         <p>Organiziramo nezaboravne rođendane i evente</p>
       </header>
@@ -71,7 +109,12 @@ export default function App() {
                     <li key={index}>{item}</li>
                   ))}
                 </ul>
-                <button className="select-button">Odaberi</button>
+                <button 
+                  className="select-button"
+                  onClick={(e) => selectPackage(pkg, e)}
+                >
+                  Odaberi
+                </button>
               </div>
             ))}
           </div>
@@ -87,10 +130,56 @@ export default function App() {
       </main>
 
       <footer>
-        <p>📞 +385 99 123 4567</p>
-        <p>📧 info@partyobrt.hr</p>
-        <p>📍 Zagrebačka ulica 123, Zagreb</p>
+        <div className="contact-form">
+          <h3>Kontaktirajte nas</h3>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="Ime i prezime"
+              required
+              aria-label="Ime i prezime"
+            />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Email adresa"
+              required
+              aria-label="Email adresa"
+            />
+            <input
+              type="text"
+              name="package"
+              value={selectedPackage ? `${selectedPackage.name} (${selectedPackage.price})` : ''}
+              readOnly
+              placeholder="Odabrani paket"
+              aria-label="Odabrani paket"
+            />
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
+              placeholder="Vaša poruka"
+              rows="4"
+              required
+              aria-label="Vaša poruka"
+            />
+            <button type="submit" className="cta-button">
+              Pošalji upit
+            </button>
+          </form>
+        </div>
+        <div className="contact-info">
+          <p>📞 +385 99 123 4567</p>
+          <p>📧 info@partyobrt.hr</p>
+          <p>📍 Zagrebačka ulica 123, Zagreb</p>
+        </div>
       </footer>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
