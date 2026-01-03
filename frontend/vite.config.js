@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 // Vite config for both dev and production
 export default defineConfig(({ mode }) => ({
@@ -27,4 +27,4 @@ export default defineConfig(({ mode }) => ({
     open: true,
     strictPort: true
   }
-}));
+}))
