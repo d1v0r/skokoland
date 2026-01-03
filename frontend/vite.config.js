@@ -1,30 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
 
-// Vite config for both dev and production
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [react()],
-  root: '.',
-  base: mode === 'production' ? './' : '/',
-  publicDir: 'public',
+  base: '/',
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html')
-      }
-    }
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src')
-    }
-  },
-  server: {
-    port: 3000,
-    open: true,
-    strictPort: true
+    emptyOutDir: true
   }
-}))
+})
